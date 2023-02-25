@@ -30,7 +30,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="flex md:flex-col gap-6 items-center justify-between px-12 max-md:px-4 py-6">
+      <header className="flex max-md:flex-col gap-6 items-center justify-between px-12 max-md:px-4 py-6">
         <h2 className="font-bold text-3xl text-center">Image Gallery</h2>
         <input
           type={"search"}
