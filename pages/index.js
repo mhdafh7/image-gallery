@@ -3,20 +3,22 @@ import ImageCard from "@/components/ImageCard";
 import { useQuery } from "react-query";
 import { getImages } from "./api/unsplashApi";
 import { useState } from "react";
+import useDebounce from "@/hooks/useDebounce";
+import Modal from "@/components/Modal";
 
 export default function Home() {
   const [query, setQuery] = useState("random");
+  const [showModal, setShowModal] = useState(false);
+  const debouncedQuery = useDebounce(query, 300);
   const {
     isLoading,
     isError,
     error,
-    isSuccess,
-    refetch,
     data: images,
-  } = useQuery(["images", query], () => getImages(["rentals", query], query), {
+  } = useQuery(["images", debouncedQuery], () => getImages(debouncedQuery), {
     keepPreviousData: true,
   });
-  console.log(images);
+  // console.log(images);
   return (
     <>
       <Head>
@@ -29,16 +31,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="flex items-center justify-between px-12 max-md:px-4 py-6">
-        <h2 className="font-bold text-3xl text-center">Image Gallery</h2>{" "}
+        <h2 className="font-bold text-3xl text-center">Image Gallery</h2>
         <input
           type={"search"}
           placeholder="Search for images"
           onChange={(e) => {
             setQuery(e.target.value);
-            setTimeout(() => { 
-              console.log('fetch');
-              refetch()
-             }, 500);
           }}
           className="w-72 max-w-screen-sm rounded text-slate-800 border-gray-200 border-solid border-2 px-2 py-1 text-sm"
         />
@@ -73,22 +71,25 @@ export default function Home() {
             </span>
             Error!! {error.message}
           </div>
-        ) : isSuccess ? (
+        ) : images.results.length > 0 ? (
           <section className="grid grid-cols-3 place-items-center w-full gap-5 mt-5 max-lg:grid-cols-2 max-lg:grid-rows-3 max-md:flex max-md:items-center max-md:justify-center max-md:flex-col px-6">
             {images.results.map((image) => {
               return (
                 <ImageCard
                   key={image.id}
-                  url={image.urls.small}
+                  url={image.urls}
                   alt={image.alt_description}
-                  blurDataURL={image.urls.thumb}
                   likes={image.likes}
                   user={image.user}
+                  setShowModal={setShowModal}
                 />
               );
             })}
           </section>
-        ) : null}
+        ) : (
+          <p>No image found!!</p>
+        )}
+        {showModal ? <Modal setShowModal={setShowModal} /> : null}
       </main>
     </>
   );
