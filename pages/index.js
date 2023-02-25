@@ -5,9 +5,10 @@ import { getImages } from "./api/unsplashApi";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import Modal from "@/components/Modal";
+import { Empty, ErrorIcon } from "@/components/Svgs";
 
 export default function Home() {
-  const [query, setQuery] = useState("random");
+  const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
   const {
@@ -18,7 +19,6 @@ export default function Home() {
   } = useQuery(["images", debouncedQuery], () => getImages(debouncedQuery), {
     keepPreviousData: true,
   });
-  // console.log(images);
   return (
     <>
       <Head>
@@ -56,22 +56,28 @@ export default function Home() {
             role="alert"
           >
             <span className="mr-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="h-5 w-5"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <ErrorIcon />
             </span>
             Error!! {error.message}
           </div>
-        ) : images.results.length > 0 ? (
+        ) : images.length > 0 ? (
+          <section className="grid grid-cols-3 place-items-center w-full gap-5 mt-5 max-lg:grid-cols-2 max-lg:grid-rows-3 max-md:flex max-md:items-center max-md:justify-center max-md:flex-col px-6">
+            {images.map((image) => {
+              return (
+                <ImageCard
+                  key={image.id}
+                  url={image.urls}
+                  alt={image.alt_description}
+                  likes={image.likes}
+                  user={image.user}
+                  setShowModal={setShowModal}
+                />
+              );
+            })}
+          </section>
+        ) : debouncedQuery !== "" &&
+          images.results &&
+          images.results.length > 0 ? (
           <section className="grid grid-cols-3 place-items-center w-full gap-5 mt-5 max-lg:grid-cols-2 max-lg:grid-rows-3 max-md:flex max-md:items-center max-md:justify-center max-md:flex-col px-6">
             {images.results.map((image) => {
               return (
@@ -87,7 +93,15 @@ export default function Home() {
             })}
           </section>
         ) : (
-          <p>No image found!!</p>
+          <div
+            className="mb-4 rounded-lg py-5 px-6 text-base text-neutral-600 w-full text-center flex flex-col items-center"
+            role="alert"
+          >
+            <p>
+              Oh oh! No image found for <strong>{debouncedQuery}</strong>
+            </p>
+            <Empty />
+          </div>
         )}
         {showModal ? <Modal setShowModal={setShowModal} /> : null}
       </main>

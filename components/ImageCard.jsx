@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useContext } from 'react'
-import { HeartIcon } from "@heroicons/react/20/solid";
+import { HeartIcon } from "@heroicons/react/24/outline";
 import { ModalContext } from "@/context/ModalContext";
 
 const ImageCard = ({ url, alt, user, likes, setShowModal }) => {
@@ -39,7 +39,7 @@ const ImageCard = ({ url, alt, user, likes, setShowModal }) => {
           </span>
         </div>
         <span className="flex items-center justify-center gap-1">
-          <HeartIcon className="w-4 h-4 text-pink-500" />
+          <HeartIcon className="w-4 h-4" />
           {likes}
         </span>
       </div>
