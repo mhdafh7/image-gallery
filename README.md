@@ -12,3 +12,5 @@ A single page application that uses Unsplash api to fetch images on random, or b
 - [ ] Update UI
 - [ ] Tags
 - [ ] Download image
+
+[![Edit image-gallery](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mhdafh7/image-gallery/tree/main/?fontsize=14&hidenavigation=1&theme=dark)
