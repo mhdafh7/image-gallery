@@ -66,10 +66,7 @@ export default function Home() {
               return (
                 <ImageCard
                   key={image.id}
-                  url={image.urls}
-                  alt={image.alt_description}
-                  likes={image.likes}
-                  user={image.user}
+                  image={image}
                   setShowModal={setShowModal}
                 />
               );
@@ -83,10 +80,7 @@ export default function Home() {
               return (
                 <ImageCard
                   key={image.id}
-                  url={image.urls}
-                  alt={image.alt_description}
-                  likes={image.likes}
-                  user={image.user}
+                  image={image}
                   setShowModal={setShowModal}
                 />
               );
