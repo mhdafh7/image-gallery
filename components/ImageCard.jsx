@@ -8,8 +8,14 @@ import { ModalContext } from "@/context/ModalContext";
 const ImageCard = ({ image, setShowModal }) => {
   const { setImgData, setUserData } = useContext(ModalContext);
   const [imgLoaded, setImgLoaded] = useState(false);
+
+  const oldHeight = image.height;
+  const oldWidth = image.width;
+  const newWidth = 400;
+  const newHeight = Math.round((oldHeight * newWidth) / oldWidth);
+
   return (
-    <article
+    <figure
       onClick={() => {
         setImgData({
           imgUrl: image.urls.regular,
@@ -19,51 +25,57 @@ const ImageCard = ({ image, setShowModal }) => {
         setUserData(user);
         setShowModal(true);
       }}
-      className="flex flex-col relative overflow-hidden rounded-md shadow-none hover:shadow-lg transition-shadow h-64 w-full cursor-pointer border-2 border-gray-200"
+      className="cursor-pointer m-3 max-[360px]:m-0"
     >
-      {!imgLoaded ? (
-        <Blurhash
-          hash={image.blur_hash}
-          width={400}
-          height={300}
-          resolutionX={32}
-          resolutionY={32}
-          punch={1}
-        />
-      ) : null}
-      <Image
-        src={image.urls.regular}
-        alt={image.alt_description}
-        fill
-        className="object-cover"
-        onLoad={() => {
-          console.log("image loaded");
-          setImgLoaded(true);
-        }}
-      />
-
-      <div className="absolute bottom-0 bg-white bg-opacity-90 backdrop-blur-sm w-full text-black flex items-center justify-between text-sm px-6 py-4">
-        <div className="flex items-center justify-center gap-2">
-          <Image
-            src={image.user.profile_image.small}
-            alt={`profile picture of ${image.user.username}`}
-            height={32}
-            width={32}
-            className="rounded-full"
-          />
-          <span className="flex flex-col">
-            <h5 className="font-semibold">{image.user.name}</h5>
-            <h6 className="text-xs text-gray-500 italic font-medium">
-              @{image.user.username}
-            </h6>
-          </span>
+      <div className="flex flex-col">
+        <div className="relative">
+          {/* Image and blur */}
+          <div className="relative" style={{ height: `${newHeight}px` }}>
+            {!imgLoaded ? (
+              <Blurhash
+                hash={image.blur_hash}
+                punch={1}
+                className="w-full h-full !static"
+              />
+            ) : null}
+            <div className="relative h-full">
+              <Image
+                src={image.urls.regular}
+                alt={image.alt_description}
+                fill
+                className={`object-cover w-full h-full aspect-[${newWidth}/${newHeight}]`}
+                onLoad={() => {
+                  console.log("image loaded");
+                  setImgLoaded(true);
+                }}
+              />
+            </div>
+          </div>
+          {/* Info section */}
+          <div className="bg-white bg-opacity-90 backdrop-blur-sm w-full text-black flex items-center justify-between text-sm px-6 py-4">
+            <div className="flex items-center justify-center gap-2">
+              <Image
+                src={image.user.profile_image.small}
+                alt={`profile picture of ${image.user.username}`}
+                height={32}
+                width={32}
+                className="rounded-full"
+              />
+              <span className="flex flex-col">
+                <h5 className="font-semibold">{image.user.name}</h5>
+                <h6 className="text-xs text-gray-500 italic font-medium">
+                  @{image.user.username}
+                </h6>
+              </span>
+            </div>
+            <span className="flex items-center justify-center gap-1">
+              <HeartIcon className="w-4 h-4" />
+              {image.likes}
+            </span>
+          </div>
         </div>
-        <span className="flex items-center justify-center gap-1">
-          <HeartIcon className="w-4 h-4" />
-          {image.likes}
-        </span>
       </div>
-    </article>
+    </figure>
   );
 };
 export default ImageCard;

@@ -1,11 +1,15 @@
 import Head from "next/head";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import ImageCard from "@/components/ImageCard";
 import { useQuery } from "react-query";
 import { getImages } from "./api/unsplashApi";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import Modal from "@/components/Modal";
-import { Empty, ErrorIcon } from "@/components/Svgs";
+import Header from "@/components/Header";
+import ErrorBanner from "@/components/ErrorBanner";
+import LoadingBanner from "@/components/LoadingBanner";
+import { Empty } from "@/components/Svgs";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -19,6 +23,17 @@ export default function Home() {
   } = useQuery(["images", debouncedQuery], () => getImages(debouncedQuery), {
     keepPreviousData: true,
   });
+
+  const Wrapper = ({ children }) => {
+    return (
+      <ResponsiveMasonry
+        columnsCountBreakPoints={{ 360: 1, 768: 2, 992: 3 }}
+        className="h-full w-full"
+      >
+        <Masonry>{children}</Masonry>
+      </ResponsiveMasonry>
+    );
+  };
   return (
     <>
       <Head>
@@ -30,38 +45,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="flex max-md:flex-col gap-6 items-center justify-between px-12 max-md:px-4 py-6">
-        <h2 className="font-bold text-3xl text-center">Image Gallery</h2>
-        <input
-          type={"search"}
-          placeholder="Search for images"
-          onChange={(e) => {
-            setQuery(e.target.value);
-          }}
-          className="w-72 max-w-screen-sm rounded text-slate-800 border-gray-200 border-solid border-2 px-2 py-1 text-sm"
-        />
-      </header>
-      <main className="flex flex-col gap-8 py-6 px-8 md:px-4 items-center justify-center">
+      <Header />
+      <main className="flex flex-col gap-8 pb-6 px-8 max-md:px-0 mt-24 max-md:mt-36 items-center justify-start max-w-7xl min-h-screen mx-auto">
         {isLoading ? (
-          <div className="flex items-center justify-center gap-6 text-gray-500">
-            <strong>Loading images...</strong>
-            <div
-              className="ml-auto inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-              role="status"
-            ></div>
-          </div>
+          <LoadingBanner />
         ) : isError ? (
-          <div
-            className="mb-3 inline-flex w-full items-center rounded-lg bg-red-100 py-5 px-6 text-base text-red-700"
-            role="alert"
-          >
-            <span className="mr-2">
-              <ErrorIcon />
-            </span>
-            Error!! {error.message}
-          </div>
+          <ErrorBanner error={error} />
         ) : images.length > 0 ? (
-          <section className="grid grid-cols-3 place-items-center w-full gap-5 mt-5 max-lg:grid-cols-2 max-lg:grid-rows-3 max-md:flex max-md:items-center max-md:justify-center max-md:flex-col px-6">
+          <Wrapper>
             {images.map((image) => {
               return (
                 <ImageCard
@@ -71,11 +62,11 @@ export default function Home() {
                 />
               );
             })}
-          </section>
+          </Wrapper>
         ) : debouncedQuery !== "" &&
           images.results &&
           images.results.length > 0 ? (
-          <section className="grid grid-cols-3 place-items-center w-full gap-5 mt-5 max-lg:grid-cols-2 max-lg:grid-rows-3 max-md:flex max-md:items-center max-md:justify-center max-md:flex-col px-6">
+          <Wrapper>
             {images.results.map((image) => {
               return (
                 <ImageCard
@@ -85,7 +76,7 @@ export default function Home() {
                 />
               );
             })}
-          </section>
+          </Wrapper>
         ) : (
           <div
             className="mb-4 rounded-lg py-5 px-6 text-base text-neutral-600 w-full text-center flex flex-col items-center"
