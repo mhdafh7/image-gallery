@@ -1,27 +1,28 @@
 import Image from "next/image";
 import { useContext } from "react";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ModalContext } from "@/context/ModalContext";
 import { InstagramIcon } from "./Svgs";
 
 const Modal = ({ setShowModal }) => {
   const { imgData, userData } = useContext(ModalContext);
+  console.log(imgData);
 
   return (
     <>
-      <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none w-[90vw] h-[90vh] m-auto rounded bg-white">
+      <div className="justify-center items-center flex fixed inset-0 z-[51] outline-none focus:outline-none w-[90vw] h-[90vh] m-auto rounded bg-white">
         <button
           onClick={() => {
             setShowModal(false);
           }}
-          className="absolute bg-white rounded-full z-[60] h-6 w-6 flex items-center justify-center top-[-10px] right-[-10px] hover:scale-125 transition-transform"
+          className="absolute bg-black rounded-full z-[60] h-8 w-8 flex items-center justify-center top-[-10px] right-[-10px] hover:scale-125 transition-transform"
         >
-          X
+          <XMarkIcon className="w-6 h-6 text-white" />
         </button>
         <div className="relative my-6 mx-auto w-full h-full flex items-center justify-center">
           <Image
-            src={imgData.imgUrl.full}
-            alt={imgData.imgAlt}
+            src={imgData.imgUrl}
+            alt={imgData.imgAlt ? imgData.imgAlt : `photo by ${userData.name}`}
             placeholder="blue"
             blurDataURL={imgData.imgUrl.thumb}
             fill
@@ -51,7 +52,6 @@ const Modal = ({ setShowModal }) => {
                 )}
                 {userData.twitter_username && (
                   <span className="flex items-center gap-1 text-gray-600">
-
                     <p>{userData.twitter_username}</p>
                   </span>
                 )}
@@ -64,7 +64,7 @@ const Modal = ({ setShowModal }) => {
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="bg-opacity-25 fixed inset-0 z-50 bg-black backdrop-blur-md"></div>
     </>
   );
 };

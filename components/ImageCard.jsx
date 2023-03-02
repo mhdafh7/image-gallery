@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useRef } from "react";
 import { Blurhash } from "react-blurhash";
 import { useContext } from "react";
 import { HeartIcon } from "@heroicons/react/24/outline";
@@ -7,7 +7,7 @@ import { ModalContext } from "@/context/ModalContext";
 
 const ImageCard = ({ image, setShowModal }) => {
   const { setImgData, setUserData } = useContext(ModalContext);
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const blurRef = useRef(null);
 
   const oldHeight = image.height;
   const oldWidth = image.width;
@@ -18,11 +18,11 @@ const ImageCard = ({ image, setShowModal }) => {
     <figure
       onClick={() => {
         setImgData({
-          imgUrl: image.urls.regular,
+          imgUrl: image.urls.full,
           imgAlt: image.alt_description,
           likes: image.likes,
         });
-        setUserData(user);
+        setUserData(image.user);
         setShowModal(true);
       }}
       className="cursor-pointer m-3 max-[360px]:m-0"
@@ -31,13 +31,12 @@ const ImageCard = ({ image, setShowModal }) => {
         <div className="relative">
           {/* Image and blur */}
           <div className="relative" style={{ height: `${newHeight}px` }}>
-            {!imgLoaded ? (
-              <Blurhash
-                hash={image.blur_hash}
-                punch={1}
-                className="w-full h-full !static"
-              />
-            ) : null}
+            <Blurhash
+              ref={blurRef}
+              hash={image.blur_hash}
+              punch={1}
+              className="!w-full !h-full !absolute"
+            />
             <div className="relative h-full">
               <Image
                 src={image.urls.regular}
@@ -48,10 +47,6 @@ const ImageCard = ({ image, setShowModal }) => {
                 }
                 fill
                 className={`object-cover w-full h-full aspect-[${newWidth}/${newHeight}]`}
-                onLoad={() => {
-                  console.log(`${image.alt_description} loaded`);
-                  setImgLoaded(true);
-                }}
               />
             </div>
           </div>
