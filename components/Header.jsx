@@ -1,6 +1,6 @@
 import { Logo } from "./Svgs";
 
-const Header = () => {
+const Header = ({setQuery}) => {
   return (
     <header className="fixed top-0 flex gap-6 items-center justify-between px-12 max-md:px-4 py-6 bg-white bg-opacity-60 backdrop-blur-md z-50 w-full">
       <Logo />

@@ -45,7 +45,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
+      <Header setQuery={setQuery}/>
       <main className="flex flex-col gap-8 pb-6 px-8 max-md:px-0 mt-24 max-md:mt-36 items-center justify-start max-w-7xl min-h-screen mx-auto">
         {isLoading ? (
           <LoadingBanner />

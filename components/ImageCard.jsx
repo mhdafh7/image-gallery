@@ -41,11 +41,15 @@ const ImageCard = ({ image, setShowModal }) => {
             <div className="relative h-full">
               <Image
                 src={image.urls.regular}
-                alt={image.alt_description}
+                alt={
+                  image.alt_description
+                    ? image.alt_description
+                    : image.urls.regular
+                }
                 fill
                 className={`object-cover w-full h-full aspect-[${newWidth}/${newHeight}]`}
                 onLoad={() => {
-                  console.log("image loaded");
+                  console.log(`${image.alt_description} loaded`);
                   setImgLoaded(true);
                 }}
               />
