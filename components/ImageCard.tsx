@@ -1,11 +1,16 @@
 import Image from "next/image";
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { Blurhash } from "react-blurhash";
 import { useContext } from "react";
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { ModalContext } from "@/context/ModalContext";
+import { ImageType, ModalContext } from "../context/ModalContext";
 
-const ImageCard = ({ image, setShowModal }) => {
+
+interface ImageCardProps {
+  image: ImageType;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+}
+const ImageCard = ({ image, setShowModal }: ImageCardProps) => {
   const { setImgData, setUserData } = useContext(ModalContext);
   const blurRef = useRef(null);
 
@@ -18,9 +23,8 @@ const ImageCard = ({ image, setShowModal }) => {
     <figure
       onClick={() => {
         setImgData({
-          imgUrl: image.urls.full,
-          imgAlt: image.alt_description,
-          likes: image.likes,
+          ...image,
+          alt_description: image.alt_description || image.description,
         });
         setUserData(image.user);
         setShowModal(true);

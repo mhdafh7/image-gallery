@@ -4,7 +4,7 @@ const unsplashApi = axios.create({
   baseURL: "https://api.unsplash.com/",
 });
 
-export const getImages = async (query) => {
+export const getImages = async (query: string) => {
   let res;
   if (query === "") {
     res = await unsplashApi.get(

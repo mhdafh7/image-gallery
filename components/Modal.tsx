@@ -1,10 +1,13 @@
 import Image from "next/image";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ModalContext } from "@/context/ModalContext";
 import { InstagramIcon } from "./Svgs";
 
-const Modal = ({ setShowModal }) => {
+interface ModalProps {
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+}
+const Modal = ({ setShowModal }: ModalProps) => {
   const { imgData, userData } = useContext(ModalContext);
   console.log(imgData);
 
@@ -21,10 +24,16 @@ const Modal = ({ setShowModal }) => {
         </button>
         <div className="relative my-6 mx-auto w-full h-full flex items-center justify-center">
           <Image
-            src={imgData.imgUrl}
-            alt={imgData.imgAlt ? imgData.imgAlt : `photo by ${userData.name}`}
-            placeholder="blue"
-            blurDataURL={imgData.imgUrl.thumb}
+            src={imgData.urls.full}
+            alt={
+              imgData.alt_description
+                ? imgData.alt_description
+                : imgData.description
+                ? imgData.description
+                : `photo by ${userData.name}`
+            }
+            placeholder="blur"
+            blurDataURL={imgData.urls.thumb}
             fill
             className="object-cover"
           />

@@ -1,6 +1,10 @@
-import { ErrorIcon } from "@/components/Svgs";
+import { ErrorIcon } from "./Svgs";
 
-const ErrorBanner = ({error}) => {
+interface ErrorProps {
+  error: Error;
+}
+
+const ErrorBanner = ({ error }: ErrorProps) => {
   return (
     <div
       className="mb-3 inline-flex w-full items-center rounded-lg bg-red-100 py-5 px-6 text-base text-red-700"
@@ -9,7 +13,7 @@ const ErrorBanner = ({error}) => {
       <span className="mr-2">
         <ErrorIcon />
       </span>
-      Error!! {error.message}
+      <p>Error!! {error.message}</p>
     </div>
   );
 };

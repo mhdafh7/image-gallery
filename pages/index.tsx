@@ -1,5 +1,8 @@
 import Head from "next/head";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import Masonry, {
+  ResponsiveMasonry,
+  MasonryProps,
+} from "react-responsive-masonry";
 import ImageCard from "@/components/ImageCard";
 import { useQuery } from "react-query";
 import { getImages } from "./api/unsplashApi";
@@ -10,6 +13,7 @@ import Header from "@/components/Header";
 import ErrorBanner from "@/components/ErrorBanner";
 import LoadingBanner from "@/components/LoadingBanner";
 import { Empty } from "@/components/Svgs";
+import { ImageType } from "@/context/ModalContext";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -24,7 +28,7 @@ export default function Home() {
     keepPreviousData: true,
   });
 
-  const Wrapper = ({ children }) => {
+  const Wrapper = ({ children }: MasonryProps) => {
     return (
       <ResponsiveMasonry
         columnsCountBreakPoints={{ 360: 1, 768: 2, 992: 3 }}
@@ -45,15 +49,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header setQuery={setQuery}/>
+      <Header setQuery={setQuery} />
       <main className="flex flex-col gap-8 pb-6 px-8 max-md:px-0 mt-24 max-md:mt-36 items-center justify-start max-w-7xl min-h-screen mx-auto">
         {isLoading ? (
           <LoadingBanner />
         ) : isError ? (
-          <ErrorBanner error={error} />
+          <ErrorBanner error={error as Error} />
         ) : images.length > 0 ? (
           <Wrapper>
-            {images.map((image) => {
+            {images.map((image: ImageType) => {
               return (
                 <ImageCard
                   key={image.id}
@@ -67,7 +71,7 @@ export default function Home() {
           images.results &&
           images.results.length > 0 ? (
           <Wrapper>
-            {images.results.map((image) => {
+            {images.results.map((image: ImageType) => {
               return (
                 <ImageCard
                   key={image.id}
