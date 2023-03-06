@@ -35,6 +35,7 @@ const Modal = ({ setShowModal }: ModalProps) => {
             placeholder="blur"
             blurDataURL={imgData.urls.thumb}
             fill
+            sizes="100vw"
             className="object-cover"
           />
           <div className="absolute bottom-0 bg-white bg-opacity-90 backdrop-blur-sm w-full text-black flex items-center justify-between text-sm px-6 py-4">

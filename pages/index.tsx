@@ -26,6 +26,7 @@ export default function Home() {
     data: images,
   } = useQuery(["images", debouncedQuery], () => getImages(debouncedQuery), {
     keepPreviousData: true,
+    refetchOnWindowFocus: false,
   });
 
   const Wrapper = ({ children }: MasonryProps) => {

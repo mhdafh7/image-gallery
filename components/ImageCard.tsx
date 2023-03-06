@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { ImageType, ModalContext } from "../context/ModalContext";
 
-
 interface ImageCardProps {
   image: ImageType;
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -16,7 +15,8 @@ const ImageCard = ({ image, setShowModal }: ImageCardProps) => {
 
   const oldHeight = image.height;
   const oldWidth = image.width;
-  const newWidth = 400;
+  const newWidth = 360;
+
   const newHeight = Math.round((oldHeight * newWidth) / oldWidth);
 
   return (
@@ -50,7 +50,11 @@ const ImageCard = ({ image, setShowModal }: ImageCardProps) => {
                     : image.urls.regular
                 }
                 fill
-                className={`object-cover w-full h-full aspect-[${newWidth}/${newHeight}]`}
+                sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
+                quality={100}
+                className={`object-cover w-auto h-auto`}
               />
             </div>
           </div>
